@@ -13,6 +13,7 @@ class SVM:
     def fit(self, X, Y):
         solver = SMO(self.kernel(X,X),Y,self.C)
         self.alfa = solver.solve()
+        print(self.alfa)
         
     def predict(self, X):
         gram = self.kernel(self.support_vectors, X).T
