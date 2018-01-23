@@ -7,6 +7,7 @@ class SMO:
         self.K=gram_matrix
         #no supportvector is a correct initialization
         self.alfa= np.zeros(len(labels))
+        self.bias =0
 
     def calc_obj(self):
         label_array=self.labels.reshape(1,-1)
@@ -62,26 +63,18 @@ class SMO:
         tmp2=self.alfa[index1]
         self.alfa[index2] = alfa2
         self.alfa[index1] = (nu-alfa2*self.labels[index2])*self.labels[index1]
-        #TODO: kitalalni miert nem monoton
         if before>self.calc_obj():
             self.alfa[index2]=tmp1
             self.alfa[index1]=tmp2
+            self.search_max(nu,index1,index2)
             
         
-    def solve(self, tolerance=-0.01, maxiter=100):
+    def solve(self, maxiter=100):
         nr_iter=0
         #differance between iteraions
-        diff=tolerance+1.0
-        before=self.calc_obj()
-        while nr_iter<maxiter and tolerance<diff:
-            #select two item
-
+        while nr_iter<maxiter:
             for i in range(len(self.alfa)*2):
                 self.step(np.random.randint(0,len(self.alfa)),np.random.randint(0,len(self.alfa)))
-
-            after=self.calc_obj()
-            diff=after-before
-            before=after
             nr_iter=nr_iter + 1
 
         return self.alfa
