@@ -39,23 +39,20 @@ class SMO:
         nu = self.alfa[index1]*self.labels[index1]+self.alfa[index2]*self.labels[index2]
 
         #determine limits
-        high =(nu-self.C*self.labels[index1])/self.labels[index2]
-        low =nu/self.labels[index2]
-        #derivative can be negative:
-        if high<low:
-            tmp=high
-            high=low
-            low=tmp
-        if high>self.C:
-            high = self.C
-        if low<0:
-            low = 0
+        if self.labels[index1] != self.labels[index2]:
+            high=min(self.C,self.C+self.alfa[index2]-self.alfa[index1])
+            low = max(self.C,self.alfa[index2]-self.alfa[index1])
+        else:
+            high=min(self.C,self.alfa[index1]+self.alfa[index2])
+            low = max(0, self.alfa[index1]-self.alfa[index2]-self.C)
+
 
         alfa2=self.search_max(nu,index1,index2)
         if alfa2>high:
             alfa2=high
         elif alfa2<low:
             alfa2=low
+
 
         #change variables
         before = self.calc_obj()
